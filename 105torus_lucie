@@ -1,0 +1,111 @@
+#!/usr/bin/env python3
+
+import sys
+
+def main():
+    operator, coefficients, precision = get_arguments()
+
+    print(f"operator : {operator}\ncoefficients : {coefficients}\nprecision : {precision}")
+    print(f"derivative : {compute_derivative(coefficients)}")
+    if operator == 1:
+        bisection(coefficients, precision)
+    if operator == 2:
+        newton(coefficients, precision)
+    if operator == 3:
+        secant(coefficients, precision)
+
+def compute_polynomial(x, coefficients):
+    result = 0.0;
+    rank = len(coefficients)
+    for i in range(0, rank):
+        result += float(coefficients[i]) * pow(x, i)
+    return result;
+
+def compute_derivative(coefficients):
+    derivative = []
+    for i in range(1, len(coefficients)):
+        derivative.append(coefficients[i] * i)
+    return derivative
+
+def bisection(coefficients, precision):
+    a = 0.0
+    b = 1.0
+    c = 0.5
+    limit = pow(10.0, -precision)
+    fc = limit + 1
+    while abs(fc) > limit:
+        c = (a + b) / 2.0
+        fc = compute_polynomial(c, coefficients)
+        fa = compute_polynomial(a, coefficients)
+        print(f"x = {str(round(c, precision))[0:(precision + 2)]}")
+        if fc * fa < 0:
+            b = c
+        else :
+            a = c
+
+def newton(coefficients, precision):
+    a = 0.5
+    print(f"x = {a}")
+    limit = pow(10.0, -precision)
+    derivative = compute_derivative(coefficients)
+    fa = limit + 1
+    while abs(fa) > limit:
+        fa = compute_polynomial(a, coefficients)
+        ffa = compute_polynomial(a, derivative)
+        if ffa == 0:
+            sys.stderr.write("Could not compute solution : function not convex.\n")
+            sys.exit(84)
+        a = a - (fa / ffa)
+        print(f"x = {str(round(a, precision))[0:(precision + 2)]}")
+
+def secant(coefficients, precision):
+    a = 0
+    b = 1.0
+    c = 0
+    limit = pow(10.0, -precision)
+    fc = limit + 1
+    while abs(fc) > limit:
+        fa = compute_polynomial(a, coefficients)
+        fb = compute_polynomial(b, coefficients)
+        c = (a * fb - b * fa) / (fb - fa)
+        fc = compute_polynomial(c, coefficients)
+        print(f"x = {str(round(c, precision))[0:(precision + 2)]}")
+        if fc * fa < 0:
+            b = c
+        else :
+            a = c
+
+def get_arguments():
+    if len(sys.argv) > 1 and sys.argv[1] == "-h":
+        help = open("help", "r")
+        print(help.read())
+        sys.exit(0)
+    if len(sys.argv) != 8:
+        sys.stderr.write("Invalid number of arguments. Try -h\n")
+        sys.exit(84)
+
+    try:
+        operation = int(sys.argv[1])
+    except ValueError:
+        sys.stderr.write("Operation code must be an integer. Try -h\n")
+        sys.exit(84)
+    if not(operation in [1, 2, 3]):
+        sys.stderr.write("Invalid operation code. Try -h\n")
+        sys.exit(84)
+
+    try:
+        coefficients = list(map(float, sys.argv[2:7]))
+    except ValueError:
+        sys.stderr.write("Coefficients must be integers. Try -h \n")
+        sys.exit(84)
+
+    try:
+        precision = int(sys.argv[7])
+    except ValueError:
+        sys.stderr.write("Precision must be an integer. Try -h \n")
+        sys.exit(84)
+
+    return [operation, coefficients, precision]
+
+if __name__ == "__main__":
+    main()
