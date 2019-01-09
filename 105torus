@@ -36,4 +36,57 @@ def check_for_err():
         print("Flag error. Try -h for more informations.")
         sys.exit(84)
 
+def f(x):
+    im = float(sys.argv[6])*(x**4) + float(sys.argv[5])*(x**3) + float(sys.argv[4])*(x**2) + float(sys.argv[3])*x + float(sys.argv[2])
+    return (im)
+
+def fp(x):
+    im = 4*float(sys.argv[6])*(x**3) + 3*float(sys.argv[5])*(x**2) + 2*float(sys.argv[4])*x + float(sys.argv[3])
+    return (im)
+
+def bisec():
+    a = 0.0
+    b = 1.0
+    c = (a + b)/2.0
+
+    while abs(f(c)) > (10**(-int(sys.argv[7]))):
+        c = (a + b)/2.0
+        if (f(c)*f(a)) < 0:
+            b = c
+        else:
+            a = c
+        print("x = {}".format(round(c, int(sys.argv[7]))))
+    return (0)
+
+def newt():
+    a = 0.5
+
+    while abs(f(a)) > (10**(-int(sys.argv[7]))):
+        print("x = {}".format(round(a, int(sys.argv[7]))))
+        a = a - (f(a)/fp(a))
+    return (0)
+
+def sec():
+    a = 0.0
+    b = 1.0
+    c = a - (f(a) * ((b - a) / (f(b) - f(a))))
+
+    while abs(f(c)) > (10**(-int(sys.argv[7]))):
+        c = a - (f(a) * ((b - a) / (f(b) - f(a))))
+        if (f(c)*f(a)) < 0:
+            b = c
+        else:
+            a = c
+        print("x = {}".format(round(c, int(sys.argv[7]))))
+    return (0)
+
+def check_meth(opt):
+    if opt == 1:
+        bisec()
+    elif opt == 2:
+        newt()
+    elif opt == 3:
+        sec()
+
 check_for_err()
+check_meth(int(sys.argv[1]))
