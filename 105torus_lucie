@@ -5,8 +5,6 @@ import sys
 def main():
     operator, coefficients, precision = get_arguments()
 
-    print(f"operator : {operator}\ncoefficients : {coefficients}\nprecision : {precision}")
-    print(f"derivative : {compute_derivative(coefficients)}")
     if operator == 1:
         bisection(coefficients, precision)
     if operator == 2:
@@ -33,11 +31,18 @@ def bisection(coefficients, precision):
     c = 0.5
     limit = pow(10.0, -precision)
     fc = limit + 1
+    full_width = False
     while abs(fc) > limit:
         c = (a + b) / 2.0
         fc = compute_polynomial(c, coefficients)
         fa = compute_polynomial(a, coefficients)
-        print(f"x = {str(round(c, precision))[0:(precision + 2)]}")
+
+        if full_width or (len(str(c)) - 2) > precision:
+            full_width = True
+            print(f"x = {c:.{precision}f}")
+        else:
+            print(f"x = {c}")
+
         if fc * fa < 0:
             b = c
         else :
@@ -45,18 +50,23 @@ def bisection(coefficients, precision):
 
 def newton(coefficients, precision):
     a = 0.5
-    print(f"x = {a}")
     limit = pow(10.0, -precision)
     derivative = compute_derivative(coefficients)
     fa = limit + 1
+    full_width = False
     while abs(fa) > limit:
+        if full_width or (len(str(a)) + 2) > precision:
+            full_width = True
+            print(f"x = {a:.{precision}f}")
+        else:
+            print(f"x = {a}")
+
         fa = compute_polynomial(a, coefficients)
         ffa = compute_polynomial(a, derivative)
         if ffa == 0:
             sys.stderr.write("Could not compute solution : function not convex.\n")
             sys.exit(84)
         a = a - (fa / ffa)
-        print(f"x = {str(round(a, precision))[0:(precision + 2)]}")
 
 def secant(coefficients, precision):
     a = 0
@@ -64,12 +74,19 @@ def secant(coefficients, precision):
     c = 0
     limit = pow(10.0, -precision)
     fc = limit + 1
+    full_width = False
     while abs(fc) > limit:
         fa = compute_polynomial(a, coefficients)
         fb = compute_polynomial(b, coefficients)
         c = (a * fb - b * fa) / (fb - fa)
         fc = compute_polynomial(c, coefficients)
-        print(f"x = {str(round(c, precision))[0:(precision + 2)]}")
+
+        if full_width or (len(str(c)) + 2) > precision:
+            full_width = True
+            print(f"x = {c:.{precision}f}")
+        else:
+            print(f"x = {c}")
+
         if fc * fa < 0:
             b = c
         else :
