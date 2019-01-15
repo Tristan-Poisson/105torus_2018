@@ -29,10 +29,13 @@ def bisection(coefficients, precision):
     a = 0.0
     b = 1.0
     c = 0.5
+    d = 0
     limit = pow(10.0, -precision)
     fc = limit + 1
     full_width = False
     while abs(fc) > limit:
+        if d > 200:
+            break
         c = (a + b) / 2.0
         fc = compute_polynomial(c, coefficients)
         fa = compute_polynomial(a, coefficients)
@@ -47,6 +50,7 @@ def bisection(coefficients, precision):
             b = c
         else :
             a = c
+        d += 1
 
 def newton(coefficients, precision):
     a = 0.5
@@ -72,14 +76,18 @@ def secant(coefficients, precision):
     a = 0
     b = 1.0
     c = 0
+    d = 0
     limit = pow(10.0, -precision)
     fc = limit + 1
     full_width = False
     while abs(fc) > limit:
+        if d > 200:
+            break
         fa = compute_polynomial(a, coefficients)
         fb = compute_polynomial(b, coefficients)
-        c = (a * fb - b * fa) / (fb - fa)
+        c = a - (fa * (b - a)) / (fb - fa)
         fc = compute_polynomial(c, coefficients)
+        d += 1
 
         if full_width or (len(str(c)) + 2) > precision:
             full_width = True

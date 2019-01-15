@@ -1,0 +1,75 @@
+#!/usr/bin/env python3                                                                        
+
+import sys
+from decimal import *
+
+def main():
+    operator, coefficients, precision = get_arguments()
+
+    if operator == 1:
+        bisection(coefficients, precision)
+    if operator == 2:
+        newton(coefficients, precision)
+    if operator == 3:
+        secant(coefficients, precision)
+
+def compute_polynomial(x, coefficients):
+    result = Decimal(0);
+    rank = len(coefficients)
+    for i in range(0, rank):
+        result = result + coefficients[i] * x ** Decimal(i)
+    return result;
+
+def secant(coefficients, precision):
+    a = Decimal(0)
+    b = Decimal(1)
+    c = Decimal(0)
+    limit = pow(10.0, -precision)
+    fc = limit + 1
+    while abs(fc) > limit:
+        fa = compute_polynomial(a, coefficients)
+        fb = Decimal(compute_polynomial(b, coefficients))
+        c = Decimal((a * fb - b * fa) / (fb - fa))
+        fc = Decimal(compute_polynomial(c, coefficients))
+        print(f"x = {c}")
+        if fc * fa < 0:
+            b = c
+        else :
+            a = c
+
+def get_arguments():
+    if len(sys.argv) > 1 and sys.argv[1] == "-h":
+        help = open("help", "r")
+        print(help.read())
+        sys.exit(0)
+    if len(sys.argv) != 8:
+        sys.stderr.write("Invalid number of arguments. Try -h\n")
+        sys.exit(84)
+
+    try:
+        operation = int(sys.argv[1])
+    except ValueError:
+        sys.stderr.write("Operation code must be an integer. Try -h\n")
+        sys.exit(84)
+    if not(operation in [1, 2, 3]):
+        sys.stderr.write("Invalid operation code. Try -h\n")
+        sys.exit(84)
+
+    try:
+        precision = int(sys.argv[7])
+    except ValueError:
+        sys.stderr.write("Precision must be an integer. Try -h \n")
+        sys.exit(84)
+
+    getcontext().prec = precision + 2
+
+    try:
+        coefficients = list(map(Decimal, sys.argv[2:7]))
+    except ValueError:
+        sys.stderr.write("Coefficients must be integers. Try -h \n")
+        sys.exit(84)
+
+    return [operation, coefficients, precision]
+
+if __name__ == "__main__":
+    main()
