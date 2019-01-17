@@ -59,10 +59,18 @@ def newton(coefficients, precision):
     while abs(fa) > limit:
         if d > 2000:
             break
-        if (len(str(a)) - 2 > precision):
-            print(f"x = {round(a, precision)}")
+
+        cstr = [str(round(c, precision))[d] for d in range(len(str(round(c, precision))))]
+        for i in range(len(cstr) - 1, 0, -1):
+            if cstr[i] == '0':
+                cstr[i] = '\0'
+            else:
+                break
+        if (len(str(c)) - 2 > precision):
+            print("x = {}".format("".join(cstr)))
         else:
-            print(f"x = {a}")
+            print("x = {}".format("".join(cstr)))
+            
         fa = compute_polynomial(a, coefficients)
         ffa = compute_polynomial(a, derivative)
         if ffa == 0:
@@ -87,10 +95,16 @@ def secant(coefficients, precision):
         c = (a - (fa * ((b - a) / (fb - fa))))
         fc = compute_polynomial(c, coefficients)
 
+        cstr = [str(round(c, precision))[d] for d in range(len(str(round(c, precision))))]
+        for i in range(len(cstr) - 1, 0, -1):
+            if cstr[i] == '0':
+                cstr[i] = '\0'
+            else:
+                break
         if (len(str(c)) - 2 > precision):
-            print(f"x = {round(c, precision)}")
+            print("x = {}".format("".join(cstr)))
         else:
-            print(f"x = {c}")
+            print("x = {}".format("".join(cstr)))
 
         if fc * fa < 0:
             b = c
