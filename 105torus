@@ -60,7 +60,7 @@ def newton(coefficients, precision):
         if d > 2000:
             break
 
-        cstr = [str(round(c, precision))[d] for d in range(len(str(round(c, precision))))]
+        cstr = [str(round(a, precision))[d] for d in range(len(str(round(a, precision))))]
         for i in range(len(cstr) - 1, 0, -1):
             if cstr[i] == '0':
                 cstr[i] = '\0'
