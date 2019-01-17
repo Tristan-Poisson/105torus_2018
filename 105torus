@@ -31,61 +31,72 @@ def bisection(coefficients, precision):
     a = Decimal(0)
     b = Decimal(1)
     c = Decimal(0.5)
-    print([a, b, c])
+    d = 0
     limit = Decimal(10.0) ** (-precision)
     fc = limit + 1
     while abs(fc) > limit:
+        if d > 2000:
+            break
         c = (a + b) / Decimal(2.0)
         fc = compute_polynomial(c, coefficients)
         fa = compute_polynomial(a, coefficients)
-        if (len(str(c)) - 2 > precision):
-            print(f"x = {round(c, precision)}")
-        else:
-            print(f"x = {c}")
+        #if (len(str(c)) - 2 > precision):
+        #    print(f"x = {round(c, precision)}")
+        #else:
+        print(f"x = {c}")
         if fc * fa < 0:
             b = c
         else :
             a = c
+        d += 1
 
 def newton(coefficients, precision):
     a = Decimal(0.5)
     limit = Decimal(10.0) ** (-precision)
     derivative = compute_derivative(coefficients)
     fa = limit + 1
+    d = 0
     while abs(fa) > limit:
-        if (len(str(a)) - 2 > precision):
-            print(f"x = {round(a, precision)}")
-        else:
-            print(f"x = {a}")
+        if d > 2000:
+            break
+        #if (len(str(a)) - 2 > precision):
+        #    print(f"x = {round(a, precision)}")
+        #else:
+        print(f"x = {a}")
         fa = compute_polynomial(a, coefficients)
         ffa = compute_polynomial(a, derivative)
         if ffa == 0:
             sys.stderr.write("Could not compute solution : function not convex.\n")
             sys.exit(84)
         a = a - (fa / ffa)
+        d += 1
 
 def secant(coefficients, precision):
     a = Decimal(0)
     b = Decimal(1.0)
     c = Decimal(0)
+    d = 0
     limit = Decimal(10.0) ** (-precision)
     fc = limit + 1
     full_width = False
     while abs(fc) > limit:
+        if d > 2000:
+            break
         fa = compute_polynomial(a, coefficients)
         fb = compute_polynomial(b, coefficients)
-        c = (a * fb - b * fa) / (fb - fa)
+        c = (a - (fa * ((b - a) / (fb - fa))))
         fc = compute_polynomial(c, coefficients)
 
-        if (len(str(c)) - 2 > precision):
-            print(f"x = {round(c, precision)}")
-        else:
-            print(f"x = {c}")
+        #if (len(str(c)) - 2 > precision):
+        #    print(f"x = {round(c, precision)}")
+        #else:
+        print(f"x = {c}")
 
         if fc * fa < 0:
             b = c
         else :
             a = c
+        d += 1
 
 def get_arguments():
     if len(sys.argv) > 1 and sys.argv[1] == "-h":
