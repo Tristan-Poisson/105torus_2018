@@ -63,7 +63,7 @@ def newton(coefficients, precision):
         cstr = [str(round(a, precision))[d] for d in range(len(str(round(a, precision))))]
         for i in range(len(cstr) - 1, 0, -1):
             if cstr[i] == '0':
-                cstr[i] = '\0'
+                cstr.pop()
             else:
                 break
         if (len(str(a)) - 2 > precision):
@@ -98,7 +98,7 @@ def secant(coefficients, precision):
         cstr = [str(round(c, precision))[d] for d in range(len(str(round(c, precision))))]
         for i in range(len(cstr) - 1, 0, -1):
             if cstr[i] == '0':
-                cstr[i] = '\0'
+                cstr.pop()
             else:
                 break
         if (len(str(c)) - 2 > precision):
@@ -142,7 +142,7 @@ def get_arguments():
         sys.stderr.write("Precision must be an integer. Try -h \n")
         sys.exit(84)
 
-    getcontext().prec = precision + 2;
+    getcontext().prec = precision + 10;
 
     return [operation, coefficients, precision]
 
