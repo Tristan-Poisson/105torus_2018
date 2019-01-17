@@ -40,10 +40,10 @@ def bisection(coefficients, precision):
         c = (a + b) / Decimal(2.0)
         fc = compute_polynomial(c, coefficients)
         fa = compute_polynomial(a, coefficients)
-        #if (len(str(c)) - 2 > precision):
-        #    print(f"x = {round(c, precision)}")
-        #else:
-        print(f"x = {c}")
+        if (len(str(c)) - 2 > precision):
+            print(f"x = {round(c, precision)}")
+        else:
+            print(f"x = {c}")
         if fc * fa < 0:
             b = c
         else :
@@ -59,10 +59,10 @@ def newton(coefficients, precision):
     while abs(fa) > limit:
         if d > 2000:
             break
-        #if (len(str(a)) - 2 > precision):
-        #    print(f"x = {round(a, precision)}")
-        #else:
-        print(f"x = {a}")
+        if (len(str(a)) - 2 > precision):
+            print(f"x = {round(a, precision)}")
+        else:
+            print(f"x = {a}")
         fa = compute_polynomial(a, coefficients)
         ffa = compute_polynomial(a, derivative)
         if ffa == 0:
@@ -87,10 +87,10 @@ def secant(coefficients, precision):
         c = (a - (fa * ((b - a) / (fb - fa))))
         fc = compute_polynomial(c, coefficients)
 
-        #if (len(str(c)) - 2 > precision):
-        #    print(f"x = {round(c, precision)}")
-        #else:
-        print(f"x = {c}")
+        if (len(str(c)) - 2 > precision):
+            print(f"x = {round(c, precision)}")
+        else:
+            print(f"x = {c}")
 
         if fc * fa < 0:
             b = c
