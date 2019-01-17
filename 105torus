@@ -125,7 +125,7 @@ def get_arguments():
         sys.stderr.write("Precision must be an integer. Try -h \n")
         sys.exit(84)
 
-    getcontext().prec = precision + 10;
+    getcontext().prec = precision + 20;
 
     return [operation, coefficients, precision]
 
